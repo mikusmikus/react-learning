@@ -1,0 +1,31 @@
+
+
+$color-primary : #ED9300;
+$color-secondary : rgb(20, 20, 34);
+
+$color-white : white;
+$color-black : black;
+
+
+@function steps($number){
+  @return $number * 4px;
+}
+
+
+@mixin for-at-least ($min-width:600px, $max-width: 900px) {
+  @media only screen and (min-width: $min-width) and (max-width: $max-width) {
+    @content;
+  }
+}
+
+$phone: 600px;
+$tablet: 900px;
+$desktop: 1200px;
+
+
+@mixin at-least ($min-width:$phone) {
+  @media only screen and (min-width: $min-width) {
+    @content;
+  }
+}
+
