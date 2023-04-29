@@ -1,0 +1,15 @@
+@import "../defaults.scss";
+
+
+.item {
+  border: 1px solid $color-primary;
+  border-radius: steps(1);
+  padding: steps(1) steps(2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: steps(2);
+
+
+}
+

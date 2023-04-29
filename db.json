@@ -1,0 +1,49 @@
+{
+  "articles": [
+    {
+      "id": 1,
+      "title": "Article 1",
+      "descriptions": "typicode"
+    },
+    {
+      "id": 2,
+      "title": "Article 2",
+      "descriptions": "typicode"
+    },
+    {
+      "title": "New article 0",
+      "description": "New article description 0",
+      "id": 3
+    },
+    {
+      "title": "New article 0",
+      "description": "New article description 0",
+      "id": 4
+    },
+    {
+      "title": "New article 0",
+      "description": "New article description 0",
+      "id": 5
+    },
+    {
+      "title": "New article 1",
+      "description": "New article description 1",
+      "id": 6
+    },
+    {
+      "title": "New article 2",
+      "description": "New article description 2",
+      "id": 7
+    },
+    {
+      "title": "New article 3",
+      "description": "New article description 3",
+      "id": 8
+    },
+    {
+      "title": "New article 3",
+      "description": "New article description 3",
+      "id": 9
+    }
+  ]
+}
