@@ -11,6 +11,18 @@
       "title": "Mikus 123 123 123 ",
       "description": "Toms1 123 123 123",
       "category": "Category 1"
+    },
+    {
+      "title": "Article 3 ",
+      "description": "",
+      "category": "Category 4",
+      "id": 3
+    },
+    {
+      "title": "Test",
+      "description": "tesrt123123",
+      "category": "Category 1",
+      "id": 4
     }
   ]
 }

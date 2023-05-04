@@ -6,12 +6,17 @@ import { delay } from "../helpers/delay";
 import { ArticleForm } from "./ArticleForm";
 import "../styles/components/articles-list.scss";
 import { Link } from "react-router-dom";
+import { Select } from "./Select";
+import Modal from "./Modal";
 
 // Pieprasījums uz serveri
 // piehglabajam datus iekš state
 // renderējam datus no state
 
-const API_URL = "http://localhost:3004/articles";
+const API_URL =
+  process.env.NODE_ENV === "production"
+    ? "http://localhost:3004/articles"
+    : process.env.REACT_APP_LOCAL_SERVER!;
 
 export const ArticlesList = () => {
   const [articles, setArticles] = useState<Article[]>([]);
@@ -19,31 +24,10 @@ export const ArticlesList = () => {
   const [isNewArticle, setIsNewArticle] = useState(false);
   const [editedArticle, setEditedArticle] = useState<null | Article>(null);
 
+  const [selectedCategory, setSelectedCategory] = useState("all");
+
   useEffect(() => {
-    // GET
-    // POST
-    // DELETE
-    // PUT
-
-    // const fetchData = () => {
-    //   fetch(API_URL, {
-    //     method: "GET",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //   })
-    //     .then((response) => response.json())
-    //     .then((articles) => {
-    //       setArticles(articles);
-    //     })
-    //     .catch((error) => {
-    //       console.log(error);
-    //     });
-    // };
-
-    // fetchData();
-
-    const fetchData2 = async () => {
+    const fetchData = async () => {
       try {
         setIsLoading(true);
         await delay(1000);
@@ -63,7 +47,7 @@ export const ArticlesList = () => {
       }
     };
 
-    fetchData2();
+    fetchData();
   }, []);
 
   const addNewArticle = async (article: Article) => {
@@ -105,95 +89,144 @@ export const ArticlesList = () => {
     }
   };
 
-  const filtereArticles = {
-    /// izfiltrēt pēc category state
-  };
+  const filtereArticles = articles.filter((article) => {
+    if (selectedCategory === "all") {
+      return true;
+    }
+    return article.category === selectedCategory;
+  });
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
+  const getOptions = (articles: Article[]): string[] => {
+    let options: string[] = ["all"];
+    articles.forEach((article) => {
+      if (!options.includes(article.category)) {
+        options.push(article.category);
+      }
+    });
+    return options;
+  };
+
   return (
-    <div>
-      {/* Pievienot filtru, lai varētu filtrēt pēc kategorijas */}
-      {/* Parādam category button un uzspiežot uz kādu no tām tiek izfiltrēi articles */}
-      <ul className="article-list">
-        {articles.length > 0
-          ? articles.map((article) => {
+    <>
+      <div>
+        {/* Pievienot filtru, lai varētu filtrēt pēc kategorijas */}
+        {/* Parādam category button un uzspiežot uz kādu no tām tiek izfiltrēi articles */}
+
+        <ArticleForm
+          onCancel={() => {
+            // setIsNewArticle(false);
+          }}
+          onSubmit={(body) => {}}
+        />
+
+        <Select
+          label="Filter by category"
+          options={getOptions(articles)}
+          selectedValue={selectedCategory}
+          onChange={(value) => {
+            setSelectedCategory(value);
+          }}
+        />
+        {filtereArticles.length > 0 ? (
+          <ul className="article-list">
+            {filtereArticles.map((article) => {
               return (
                 <li key={article.id}>
                   <article className="article-card">
-                    <h3>{article.title}</h3>
-                    {/* <p>{article.description}</p> */}
+                    <Link to={`/articles/${article.id}`} title="Go to article">
+                      <img
+                        src="https://picsum.photos/200/300"
+                        alt={article.title}
+                      />
+                    </Link>
+                    <div className="article-content">
+                      <div className="article-text">
+                        <h3>{article.title}</h3>
+                        <p>{article.category}</p>
+                      </div>
 
-                    <Button
-                      onButtonClick={() => {
-                        deleteArticle(article.id);
-                      }}
-                    >
-                      Delete
-                    </Button>
+                      <div className="article-buttons">
+                        <Button
+                          onButtonClick={() => {
+                            deleteArticle(article.id);
+                          }}
+                        >
+                          Delete
+                        </Button>
 
-                    <Button
-                      onButtonClick={() => {
-                        setEditedArticle(article);
-                      }}
-                    >
-                      Edit Article
-                    </Button>
-
-                    <Link to={`/articles/${article.id}`}>Go to article</Link>
+                        <Button
+                          onButtonClick={() => {
+                            setEditedArticle(article);
+                          }}
+                        >
+                          Edit Article
+                        </Button>
+                      </div>
+                    </div>
                   </article>
                 </li>
               );
-            })
-          : null}
-      </ul>
-      {!isNewArticle && (
-        <Button
-          onButtonClick={() => {
-            setIsNewArticle(true);
-          }}
-        >
-          Add new Article
-        </Button>
-      )}
+            })}
+          </ul>
+        ) : (
+          <div>No articles found by category:{selectedCategory}</div>
+        )}
+        {!isNewArticle && (
+          <Button
+            onButtonClick={() => {
+              setIsNewArticle(true);
+            }}
+          >
+            Add new Article
+          </Button>
+        )}
+      </div>
+      <Modal isOpen={isNewArticle || !!editedArticle} onClose={() => {}}>
+        <>
+          {isNewArticle && (
+            <ArticleForm
+              onCancel={() => {
+                setIsNewArticle(false);
+              }}
+              onSubmit={(body) => {
+                addNewArticle(body);
+              }}
+            />
+          )}
 
-      {isNewArticle && (
-        <ArticleForm
-          onCancel={() => {
-            setIsNewArticle(false);
-          }}
-          onSubmit={(body) => {
-            addNewArticle(body);
-          }}
-        />
-      )}
-
-      {editedArticle && (
-        <ArticleForm
-          onCancel={() => {
-            setEditedArticle(null);
-          }}
-          onSubmit={async (body) => {
-            try {
-              setIsLoading(true);
-              await delay(1000);
-              const { data } = await axios.put(`${API_URL}/${body.id}`, body);
-              const newArticle = articles.map((article) => {
-                if (article.id === data.id) {
-                  return data;
-                }
-                return article;
-              });
-              setArticles(newArticle);
-              setIsLoading(false);
-              setEditedArticle(null);
-            } catch (error) {}
-          }}
-          initialValues={editedArticle}
-        />
-      )}
-    </div>
+          {editedArticle && (
+            <ArticleForm
+              onCancel={() => {
+                setEditedArticle(null);
+              }}
+              onSubmit={async (body) => {
+                try {
+                  setIsLoading(true);
+                  await delay(1000);
+                  const { data } = await axios.put(
+                    `${API_URL}/${body.id}`,
+                    body
+                  );
+                  const newArticle = articles.map((article) => {
+                    if (article.id === data.id) {
+                      return data;
+                    }
+                    return article;
+                  });
+                  setArticles(newArticle);
+                  setIsLoading(false);
+                  setEditedArticle(null);
+                } catch (error) {}
+              }}
+              initialValues={editedArticle}
+            />
+          )}
+        </>
+      </Modal>
+    </>
   );
 };

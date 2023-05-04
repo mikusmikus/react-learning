@@ -15,4 +15,8 @@ export const NAV_LINKS = [
     title: "Articles",
     path: "/articles",
   },
+  {
+    title: "login",
+    path: "/login",
+  },
 ];
