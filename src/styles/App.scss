@@ -115,3 +115,11 @@ li {
 
 }
 
+
+
+.bg-image{
+  min-height: 100vh;
+  background-image: url("http://localhost:3000/images/frog.jpeg") ;
+  background-position: center;
+  background-size: cover;
+}

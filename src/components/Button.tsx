@@ -3,12 +3,17 @@ import "../styles/components/button.scss";
 
 type ButtonProps = {
   onButtonClick?: () => void;
-  variant?: "primary" | "secondary";
+  variant?: "primary" | "secondary" | "success" | "danger" | "submit";
   children: JSX.Element | string;
   type?: "button" | "submit";
 };
 
-export const Button = ({ onButtonClick, children, type="button", variant="primary" }: ButtonProps) => {
+export const Button = ({
+  onButtonClick,
+  children,
+  type = "button",
+  variant = "primary",
+}: ButtonProps) => {
   return (
     <button className={`button  ${variant}`} onClick={() => onButtonClick?.()}>
       {children}

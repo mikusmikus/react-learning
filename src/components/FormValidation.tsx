@@ -123,8 +123,11 @@ export const FormValidation = () => {
         </label>
         {form.password.error && <div>{form.password.error}</div>}
       </div>
-
-      <Button type="submit">Save</Button>
+      <div className='button-wrapper'>
+        <Button type="submit" variant="submit">
+          Save
+        </Button>
+      </div>
     </form>
   );
 };

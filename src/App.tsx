@@ -10,8 +10,10 @@ import { Article } from "./views/Article";
 import { Login } from "./views/Login";
 
 function App() {
+  console.log("process.env", process.env);
+
   return (
-    <div>
+    <div className="bg-image">
       <NavBar />
       <Routes>
         <Route path="/" element={<Home />} />
